@@ -1,9 +1,5 @@
 # Java List Interface - Revision Notes
 
-<div align="right">
-  <a href="Cursor/Cursor-Revision-Notes.md"><kbd>Next: Cursors &amp; Iterators ➡️</kbd></a>
-</div>
-
 ---
 
 ## 1. Introduction
@@ -31,6 +27,7 @@ The most widely used classes that implement the `List` interface are:
 ![alt text](Images/image.png)
 
 - **How to create an `ArrayList`:**
+
 ```java
 // 1. Using default constructor (Initial capacity is 10)
 List<String> list1 = new ArrayList<>();
@@ -226,5 +223,5 @@ list.forEach(System.out::println);
 ---
 
 <div align="left">
-  <a href="Cursor/Cursor-Revision-Notes.md"><kbd>Next: Cursors &amp; Iterators ➡️</kbd></a>
+  <a href="Cursor/Cursor-Revision-Notes"><kbd>Next: Cursors &amp; Iterators ➡️</kbd></a>
 </div>

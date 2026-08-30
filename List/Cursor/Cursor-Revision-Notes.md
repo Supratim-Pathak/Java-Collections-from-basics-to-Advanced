@@ -1,9 +1,5 @@
 # Java Cursors
 
-<div align="left">
-  <a href="../List-Revision-Notes.md"><kbd>⬅️ Previous: List Interface</kbd></a>
-</div>
-
 ---
 
 An indicator used to show the current position for respective object or element in a Collection. 
@@ -161,5 +157,5 @@ public class SpliteratorExample {
 ---
 
 <div align="left">
-  <a href="../List-Revision-Notes.md"><kbd>⬅️ Previous: List Interface</kbd></a>
+  <a href="../List-Revision-Notes"><kbd>⬅️ Previous: List Interface</kbd></a>
 </div>
