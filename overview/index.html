@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Java Collections Brain Map & Reference</title>
+  <meta name="description" content="Interactive visual brain map, hierarchy canvas diagram, and exhaustive method documentation for the Java Collections Framework.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- DYNAMIC CURSOR SPOTLIGHT LIGHT CANVAS -->
+  <canvas id="spotlight-canvas"></canvas>
+
+  <!-- MAIN FULLSCREEN VIEWPORT CONTAINER -->
+  <main class="app-viewport">
+    
+    <!-- VIEW 1: INTERACTIVE HIERARCHY CANVAS (BRAIN MAP) -->
+    <section id="canvas-view" class="view-panel active">
+      <!-- Category Filter Chips Bar (Floating Top-Left) -->
+      <div class="floating-filter-bar">
+        <button class="filter-chip active" data-filter="all">All Types</button>
+        <button class="filter-chip" data-filter="interface">Interfaces</button>
+        <button class="filter-chip" data-filter="concrete">Concrete Classes</button>
+        <button class="filter-chip" data-filter="concurrent">Concurrent</button>
+        <button class="filter-chip" data-filter="legacy">Legacy</button>
+      </div>
+
+      <div id="canvas-viewport">
+        <div id="canvas-world">
+          <svg id="svg-connections">
+            <defs>
+              <linearGradient id="gradient-extends" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#4facfe" stop-opacity="0.9"/>
+              </linearGradient>
+              <linearGradient id="gradient-implements" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#34d399" stop-opacity="0.9"/>
+              </linearGradient>
+              <linearGradient id="gradient-active" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fbbf24"/>
+                <stop offset="50%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#ec4899"/>
+              </linearGradient>
+              <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              <filter id="glow-gold" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              <marker id="arrow-extends" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                <path d="M1,1 L8,4.5 L1,8 L3,4.5 Z" fill="url(#gradient-extends)"/>
+              </marker>
+              <marker id="arrow-implements" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                <path d="M1,1 L8,4.5 L1,8 L3,4.5 Z" fill="url(#gradient-implements)"/>
+              </marker>
+            </defs>
+          </svg>
+
+          <!-- Nodes container -->
+          <div id="nodes-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: GRID EXPLORER -->
+    <section id="grid-view" class="view-panel">
+      <div id="grid-viewport">
+        <div class="grid-container" id="grid-container"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MINIMAL BOTTOM FLOATING DOCK -->
+  <div class="bottom-dock-container">
+    <nav class="pill-nav">
+      <button class="pill-btn active" data-view="canvas" title="Brain Map Hierarchy">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Brain Map
+      </button>
+      <button class="pill-btn" data-view="grid" title="Grid Card Explorer">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+        Grid Explorer
+      </button>
+    </nav>
+  </div>
+
+  <!-- ULTRA-MODERN INTERACTIVE DETAIL MODAL DIALOG -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-area">
+          <span class="node-badge" id="modal-badge">INTERFACE</span>
+          <h2 class="modal-title" id="modal-title">Collection</h2>
+        </div>
+        <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+      </div>
+
+      <div class="modal-tabs">
+        <button class="modal-tab-btn active" data-tab="overview">Overview</button>
+        <button class="modal-tab-btn" data-tab="complexity">Complexities</button>
+        <button class="modal-tab-btn" data-tab="methods">Exhaustive Methods (<span id="modal-method-count">0</span>)</button>
+        <button class="modal-tab-btn" data-tab="code">Code Example</button>
+        <button class="modal-tab-btn" data-tab="guidance">When to Use</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Tab 1: Overview -->
+        <div class="modal-tab-content active" id="tab-overview">
+          <p id="modal-summary" style="font-size: 0.98rem; line-height: 1.65; margin-bottom: 24px; color: var(--text-muted);"></p>
+          <div class="props-grid">
+            <div class="prop-card">
+              <div class="prop-label">Underlying Data Structure</div>
+              <div class="prop-value" id="modal-prop-structure">-</div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-label">Ordering Policy</div>
+              <div class="prop-value" id="modal-prop-ordering">-</div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-label">Duplicates Policy</div>
+              <div class="prop-value" id="modal-prop-duplicates">-</div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-label">Null Support</div>
+              <div class="prop-value" id="modal-prop-nulls">-</div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-label">Thread Safety</div>
+              <div class="prop-value" id="modal-prop-threadsafety">-</div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-label">Introduced In</div>
+              <div class="prop-value" id="modal-prop-version">-</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Complexities -->
+        <div class="modal-tab-content" id="tab-complexity">
+          <div class="props-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="prop-card">
+              <div class="prop-label">Access</div>
+              <div class="prop-value badge-comp" id="comp-access">O(1)</div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-label">Search</div>
+              <div class="prop-value badge-comp" id="comp-search">O(n)</div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-label">Insertion</div>
+              <div class="prop-value badge-comp" id="comp-insertion">O(1)</div>
+            </div>
+            <div class="prop-card">
+              <div class="prop-label">Deletion</div>
+              <div class="prop-value badge-comp" id="comp-deletion">O(n)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Exhaustive Methods -->
+        <div class="modal-tab-content" id="tab-methods">
+          <div class="method-toolbar">
+            <input type="text" id="method-search-input" placeholder="Filter methods by name or signature..." autocomplete="off">
+            <div class="method-cat-chips">
+              <button class="method-cat-chip active" data-mcat="all">All</button>
+              <button class="method-cat-chip" data-mcat="core">Core</button>
+              <button class="method-cat-chip" data-mcat="modification">Modification</button>
+              <button class="method-cat-chip" data-mcat="search">Search</button>
+              <button class="method-cat-chip" data-mcat="bulk">Bulk</button>
+              <button class="method-cat-chip" data-mcat="functional">Functional/Stream</button>
+            </div>
+          </div>
+          <div class="methods-list" id="modal-methods-list"></div>
+        </div>
+
+        <!-- Tab 4: Code Example -->
+        <div class="modal-tab-content" id="tab-code">
+          <div class="code-block">
+            <button class="copy-code-btn" id="copy-code-btn">Copy Code</button>
+            <code id="modal-code-snippet"></code>
+          </div>
+        </div>
+
+        <!-- Tab 5: Guidance -->
+        <div class="modal-tab-content" id="tab-guidance">
+          <div style="margin-bottom: 20px;">
+            <h4 style="color: var(--color-concrete); margin-bottom: 8px;">✅ When to Use:</h4>
+            <p id="modal-when-to-use" style="line-height: 1.55; color: var(--text-muted);"></p>
+          </div>
+          <div>
+            <h4 style="color: var(--color-legacy); margin-bottom: 8px;">❌ When to Avoid:</h4>
+            <p id="modal-when-to-avoid" style="line-height: 1.55; color: var(--text-muted);"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="collections-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
